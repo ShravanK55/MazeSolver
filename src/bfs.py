@@ -43,6 +43,7 @@ def bfs(graph, start, end):
 
         for neighbour in neighbours:
             if not visited.get(str(neighbour), False):
+                neighbour.cost = node.cost + 1
                 bfs_queue.append(neighbour)
                 parents[neighbour] = node
                 visited[str(neighbour)] = True
@@ -56,4 +57,4 @@ def bfs(graph, start, end):
         path.insert(0, node)
         node = parents.get(node)
 
-    return True, path, len(path) - 1
+    return True, path, end_node.cost

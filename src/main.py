@@ -35,10 +35,11 @@ if __name__ == "__main__":
     with open(input_file_path, 'r') as f:
         input_file_contents = f.readlines()
 
-    # Generating input.
+    # Generating the maze.
     algorithm, start, end, graph = generate_maze(input_file_contents)
     print("Algorithm: {}, Start: {}, End: {}".format(algorithm, start, end))
 
+    success, path, cost = False, None, None
     if algorithm == "BFS":
         success, path, cost = bfs(graph, start, end)
         print("Sucess: {}".format(success))
@@ -57,23 +58,18 @@ if __name__ == "__main__":
         print("Cost: {}".format(cost))
         print("Path Length: {}".format(len(path)))
 
-    """
-    # Running the algorithm.
-    tracemalloc.start()
-    start_time = time.perf_counter()
-    output_str_1, output_str_2, cost = get_minimum_sequence_alignment(input_str_1, input_str_2)
-    end_time = time.perf_counter()
-    elapsed_time = end_time - start_time
-    _, memory_usage = tracemalloc.get_traced_memory()
-    memory_usage = memory_usage / 1024
-    tracemalloc.stop()
+    if success:
+        with open(output_file_path, 'w') as f:
+            f.truncate(0)
+            f.write("{}\n".format(cost))
+            f.write("{}\n".format(len(path)))
 
-    # Writing to output file.
-    with open(output_file_path, 'w') as f:
-        f.truncate(0)
-        f.write("{}\n".format(output_str_1[:50] + ' ' + output_str_1[-50:]))
-        f.write("{}\n".format(output_str_2[:50] + ' ' + output_str_2[-50:]))
-        f.write("{}\n".format(cost))
-        f.write("{}\n".format(elapsed_time))
-        f.write("{}\n".format(memory_usage))
-    """
+            last_cost = 0
+            for node in path:
+                f.write("{} {} {} {}\n".format(node.position.x, node.position.y, node.position.z,
+                                               node.cost - last_cost))
+                last_cost = node.cost
+    else:
+        with open(output_file_path, 'w') as f:
+            f.truncate(0)
+            f.write("FAIL\n")
