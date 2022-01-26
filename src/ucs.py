@@ -1,16 +1,18 @@
 """
-Maze Solver - Breadth First Search (BFS) Algorithm
+Maze Solver - Uniform Cost Search (UCS) Algorithm
 
-A module implementing the BFS algorithm to solve mazes.
+A module implementing the UCS algorithm to solve mazes.
 
 Author: shravan@usc.edu (5451873903)
 
 """
 
+import heapq
 
-def bfs(graph, start, end):
+
+def ucs(graph, start, end):
     """
-    This is a function implementing the Breadth First Search algorithm to find paths in a graph, given a start and end
+    This is a function implementing the Uniform Cost Search algorithm to find paths in a graph, given a start and end
     node.
 
     Args:
@@ -29,12 +31,13 @@ def bfs(graph, start, end):
     if (start_node is None) or (end_node is None):
         return False, None, None
 
-    bfs_queue = [start_node]
+    ucs_queue = [start_node]
     visited = {str(start_node): True}
     parents = {}
 
-    while len(bfs_queue) != 0:
-        node = bfs_queue.pop(0)
+    heapq.heapify(ucs_queue)
+    while len(ucs_queue) != 0:
+        node = heapq.heappop(ucs_queue)
 
         if node == end_node:
             break
@@ -43,7 +46,8 @@ def bfs(graph, start, end):
 
         for neighbour in neighbours:
             if not visited.get(str(neighbour), False):
-                bfs_queue.append(neighbour)
+                neighbour.cost = neighbour.cost + node.cost
+                heapq.heappush(ucs_queue, neighbour)
                 parents[neighbour] = node
                 visited[str(neighbour)] = True
 
@@ -56,4 +60,4 @@ def bfs(graph, start, end):
         path.insert(0, node)
         node = parents.get(node)
 
-    return True, path, len(path) - 1
+    return True, path, end_node.cost

@@ -76,7 +76,14 @@ class Graph(object):
             (neighbours): List of valid neighbours for the node.
 
         """
-        return [self.get_node(neighbour) for neighbour in node.neighbours.values()]
+        neighbours = []
+
+        for action, neighbour in node.neighbours.items():
+            neighbour_node = self.get_node(neighbour)
+            neighbour_node.cost = get_action_cost(action)
+            neighbours.append(neighbour_node)
+
+        return neighbours
 
     def is_valid(self, position):
         """
@@ -99,17 +106,19 @@ class Node(object):
     A class that implements a node in a graph.
     """
 
-    def __init__(self, position, actions=None):
+    def __init__(self, position, actions=None, cost=0):
         """
         Method to initialize the graph.
 
         Args:
             position(Vector): Position vector of the node.
             actions(list): List of actions we can take at the node.
+            cost(int): Cost to reach the node. Only used for tracking purposes in algorithms. Defaults to 0.
 
         """
         self.position = position
         self.neighbours = {}
+        self.cost = cost
 
         if actions is not None:
             for action in actions:
@@ -137,6 +146,19 @@ class Node(object):
 
         """
         return self.position == other.position
+
+    def __lt__(self, other):
+        """
+        Method to compare the costs of two nodes.
+
+        Args:
+            other(Node): Other node to compare to.
+
+        Returns:
+            (bool): Whether the node's cost is lesser than the other node's.
+
+        """
+        return self.cost < other.cost
 
     def __hash__(self):
         """
