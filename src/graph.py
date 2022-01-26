@@ -52,33 +52,46 @@ class Graph(object):
         """
         self.nodes[str(node)] = node
 
-    def get_node(self, point):
+    def get_node(self, position):
         """
         Method to get the node for a given point.
 
         Args:
-            point(Vector): Point to get the node for.
+            position(Vector): Position at which we need to get the node.
 
         Returns:
-            (node): Node at the given point.
+            (node): Node at the given position.
 
         """
-        return self.nodes[str(point)] if self.is_valid(point) else None
+        return self.nodes.get(str(position)) if self.is_valid(position) else None
 
-    def is_valid(self, point):
+    def get_neighbours(self, node):
         """
-        Method to check if a point is valid (within the graph's bounds).
+        Method to get the neighbours for a given node.
 
         Args:
-            point(Vector): Point to check.
+            node(Node): Node to get the neighbours for.
 
         Returns:
-            (is_valid): Whether the point is valid or not.
+            (neighbours): List of valid neighbours for the node.
 
         """
-        return ((point.x >= 0 and point.x < self.bounds.x) and
-                (point.y >= 0 and point.y < self.bounds.y) and
-                (point.z >= 0 and point.z < self.bounds.z))
+        return [self.get_node(neighbour) for neighbour in node.neighbours.values()]
+
+    def is_valid(self, position):
+        """
+        Method to check if a position is valid (within the graph's bounds).
+
+        Args:
+            position(Vector): Position to check.
+
+        Returns:
+            (is_valid): Whether the position is valid or not.
+
+        """
+        return ((position.x >= 0 and position.x < self.bounds.x) and
+                (position.y >= 0 and position.y < self.bounds.y) and
+                (position.z >= 0 and position.z < self.bounds.z))
 
 
 class Node(object):
@@ -86,21 +99,21 @@ class Node(object):
     A class that implements a node in a graph.
     """
 
-    def __init__(self, point, actions=None):
+    def __init__(self, position, actions=None):
         """
         Method to initialize the graph.
 
         Args:
-            point(Vector): Position vector of the node.
+            position(Vector): Position vector of the node.
             actions(list): List of actions we can take at the node.
 
         """
-        self.point = point
+        self.position = position
         self.neighbours = {}
 
         if actions is not None:
             for action in actions:
-                self.neighbours[action] = get_neighbour(point, action)
+                self.neighbours[action] = get_neighbour(position, action)
 
     def __repr__(self):
         """
@@ -110,7 +123,30 @@ class Node(object):
             (str): String representation of a node.
 
         """
-        return str(self.point)
+        return str(self.position)
+
+    def __eq__(self, other):
+        """
+        Method to check whether two nodes are equal.
+
+        Args:
+            other(Node): Other node to compare to.
+
+        Returns:
+            (bool): Whether the two nodes are equal.
+
+        """
+        return self.position == other.position
+
+    def __hash__(self):
+        """
+        Method to get the hash of a node.
+
+        Returns:
+            (hash): Returns the hash of the node.
+
+        """
+        return hash(str(self))
 
     def add_neighbours(self, actions):
         """
@@ -121,15 +157,15 @@ class Node(object):
 
         """
         for action in actions:
-            self.neighbours[action] = get_neighbour(self.point, action)
+            self.neighbours[action] = get_neighbour(self.position, action)
 
 
-def get_neighbour(point, action):
+def get_neighbour(position, action):
     """
-    Method to get the neighbour for a point from an action.
+    Method to get the neighbour for a position from an action.
 
     Args:
-        point(Vector): Point at which we have to get the neighbours for.
+        position(Vector): Position at which we have to get the neighbours for.
         action(int): Action to take to get the neighbour.
 
     Returns:
@@ -137,24 +173,24 @@ def get_neighbour(point, action):
 
     """
     action_map = {
-        1:  Vector(point.x + 1, point.y, point.z),
-        2:  Vector(point.x - 1, point.y, point.z),
-        3:  Vector(point.x, point.y + 1, point.z),
-        4:  Vector(point.x, point.y - 1, point.z),
-        5:  Vector(point.x, point.y, point.z + 1),
-        6:  Vector(point.x, point.y, point.z - 1),
-        7:  Vector(point.x + 1, point.y + 1, point.z),
-        8:  Vector(point.x + 1, point.y - 1, point.z),
-        9:  Vector(point.x - 1, point.y + 1, point.z),
-        10: Vector(point.x - 1, point.y - 1, point.z),
-        11: Vector(point.x + 1, point.y, point.z + 1),
-        12: Vector(point.x + 1, point.y, point.z - 1),
-        13: Vector(point.x - 1, point.y, point.z + 1),
-        14: Vector(point.x - 1, point.y, point.z - 1),
-        15: Vector(point.x, point.y + 1, point.z + 1),
-        16: Vector(point.x, point.y + 1, point.z - 1),
-        17: Vector(point.x, point.y - 1, point.z + 1),
-        18: Vector(point.x, point.y - 1, point.z - 1)
+        1:  Vector(position.x + 1, position.y, position.z),
+        2:  Vector(position.x - 1, position.y, position.z),
+        3:  Vector(position.x, position.y + 1, position.z),
+        4:  Vector(position.x, position.y - 1, position.z),
+        5:  Vector(position.x, position.y, position.z + 1),
+        6:  Vector(position.x, position.y, position.z - 1),
+        7:  Vector(position.x + 1, position.y + 1, position.z),
+        8:  Vector(position.x + 1, position.y - 1, position.z),
+        9:  Vector(position.x - 1, position.y + 1, position.z),
+        10: Vector(position.x - 1, position.y - 1, position.z),
+        11: Vector(position.x + 1, position.y, position.z + 1),
+        12: Vector(position.x + 1, position.y, position.z - 1),
+        13: Vector(position.x - 1, position.y, position.z + 1),
+        14: Vector(position.x - 1, position.y, position.z - 1),
+        15: Vector(position.x, position.y + 1, position.z + 1),
+        16: Vector(position.x, position.y + 1, position.z - 1),
+        17: Vector(position.x, position.y - 1, position.z + 1),
+        18: Vector(position.x, position.y - 1, position.z - 1)
     }
 
     return action_map[action]
@@ -172,4 +208,4 @@ def get_action_cost(action):
         (cost): Cost of the action.
 
     """
-    return 14 if action > 6 else 10
+    return 10 if action < 6 else 14

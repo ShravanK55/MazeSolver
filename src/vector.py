@@ -40,6 +40,29 @@ class Vector(object):
         """
         return "({}, {}, {})".format(self.x, self.y, self.z)
 
+    def __eq__(self, other):
+        """
+        Method to check whether two vectors are equal.
+
+        Args:
+            other(Vector): Other vector to compare to.
+
+        Returns:
+            (bool): Whether the two vectors are equal.
+
+        """
+        return (self.x == other.x) and (self.y == other.y) and (self.z == other.z)
+
+    def __hash__(self):
+        """
+        Method to get the hash of a vector.
+
+        Returns:
+            (hash): Returns the hash of the vector.
+
+        """
+        return hash(str(self))
+
     @staticmethod
     def from_str(s):
         """

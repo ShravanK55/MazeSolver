@@ -12,13 +12,14 @@ Author: shravan@usc.edu (5451873903)
 
 import argparse
 
+from bfs import bfs
 from utils import generate_maze
 
 
 if __name__ == "__main__":
     # Getting args.
     parser = argparse.ArgumentParser(description='Module to compute the sequence alignment of two strings.')
-    parser.add_argument("input", nargs='?', type=str, default="input.txt",
+    parser.add_argument("input", nargs='?', type=str, default="input1.txt",
                         help="Input file path containing the string generator arguments.")
     parser.add_argument("-o", "--output", type=str, default="output.txt",
                         help="Output file to store the results of the algorithm.")
@@ -36,6 +37,12 @@ if __name__ == "__main__":
     algorithm, start, end, graph = generate_maze(input_file_contents)
     print("Algorithm: {}, Start: {}, End: {}".format(algorithm, start, end))
     print("Graph: {}".format(graph))
+
+    if algorithm == "BFS":
+        success, path, cost = bfs(graph, start, end)
+        print("Sucess: {}".format(success))
+        print("Path: {}".format(path))
+        print("Cost: {}".format(cost))
 
     """
     # Running the algorithm.
