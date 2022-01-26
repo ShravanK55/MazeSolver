@@ -20,11 +20,11 @@ from utils import generate_maze
 
 if __name__ == "__main__":
     # Getting args.
-    parser = argparse.ArgumentParser(description='Module to compute the sequence alignment of two strings.')
-    parser.add_argument("input", nargs='?', type=str, default="input1.txt",
-                        help="Input file path containing the string generator arguments.")
+    parser = argparse.ArgumentParser(description='Module to perform pathfinding in graphs using different algorithms.')
+    parser.add_argument("input", nargs='?', type=str, default="input.txt",
+                        help="Input file path containing the graph and node information.")
     parser.add_argument("-o", "--output", type=str, default="output.txt",
-                        help="Output file to store the results of the algorithm.")
+                        help="Output file to store the results of the pathfinding algorithms.")
     args = parser.parse_args()
 
     input_file_path = args.input
