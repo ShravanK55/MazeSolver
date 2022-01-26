@@ -23,8 +23,6 @@ def generate_maze(file_contents):
             position and the graph of the maze.
 
     """
-    print(file_contents)
-
     algorithm = file_contents[0].split('\n')[0]
     bounds = Vector.from_str(file_contents[1].split('\n')[0])
     start = Vector.from_str(file_contents[2].split('\n')[0])

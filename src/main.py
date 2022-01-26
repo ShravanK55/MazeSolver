@@ -12,6 +12,7 @@ Author: shravan@usc.edu (5451873903)
 
 import argparse
 
+from a_star import a_star
 from bfs import bfs
 from ucs import ucs
 from utils import generate_maze
@@ -37,19 +38,24 @@ if __name__ == "__main__":
     # Generating input.
     algorithm, start, end, graph = generate_maze(input_file_contents)
     print("Algorithm: {}, Start: {}, End: {}".format(algorithm, start, end))
-    print("Graph: {}".format(graph))
 
     if algorithm == "BFS":
         success, path, cost = bfs(graph, start, end)
         print("Sucess: {}".format(success))
-        print("Path: {}".format(path))
         print("Cost: {}".format(cost))
+        print("Path Length: {}".format(len(path)))
 
     elif algorithm == "UCS":
         success, path, cost = ucs(graph, start, end)
         print("Sucess: {}".format(success))
-        print("Path: {}".format(path))
         print("Cost: {}".format(cost))
+        print("Path Length: {}".format(len(path)))
+
+    elif algorithm == "A*":
+        success, path, cost = a_star(graph, start, end)
+        print("Sucess: {}".format(success))
+        print("Cost: {}".format(cost))
+        print("Path Length: {}".format(len(path)))
 
     """
     # Running the algorithm.

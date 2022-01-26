@@ -76,14 +76,27 @@ class Graph(object):
             (neighbours): List of valid neighbours for the node.
 
         """
-        neighbours = []
+        return [self.get_node(neighbour) for neighbour in node.neighbours.values()]
+
+    def get_neighbours_with_costs(self, node):
+        """
+        Method to get the neighbours and their costss. for a given node.
+
+        Args:
+            node(Node): Node to get the neighbours for.
+
+        Returns:
+            (neighbour_cost_map): Map of valid neighbours with their costs for each node.
+
+        """
+        neighbour_cost_map = {}
 
         for action, neighbour in node.neighbours.items():
             neighbour_node = self.get_node(neighbour)
-            neighbour_node.cost = get_action_cost(action)
-            neighbours.append(neighbour_node)
+            cost = get_action_cost(action)
+            neighbour_cost_map[neighbour_node] = cost
 
-        return neighbours
+        return neighbour_cost_map
 
     def is_valid(self, position):
         """
@@ -106,19 +119,21 @@ class Node(object):
     A class that implements a node in a graph.
     """
 
-    def __init__(self, position, actions=None, cost=0):
+    def __init__(self, position, actions=None, cost=0, heuristic=0):
         """
         Method to initialize the graph.
 
         Args:
             position(Vector): Position vector of the node.
             actions(list): List of actions we can take at the node.
-            cost(int): Cost to reach the node. Only used for tracking purposes in algorithms. Defaults to 0.
+            cost(int): Cost to reach the node. Only for use in pathfinding. Defaults to 0.
+            heuristic(int): Heuristic to reach the target node. Only used for use in pathfinding. Defaults to 0.
 
         """
         self.position = position
         self.neighbours = {}
         self.cost = cost
+        self.heuristic = heuristic
 
         if actions is not None:
             for action in actions:
@@ -158,7 +173,7 @@ class Node(object):
             (bool): Whether the node's cost is lesser than the other node's.
 
         """
-        return self.cost < other.cost
+        return self.total_cost < other.total_cost
 
     def __hash__(self):
         """
@@ -169,6 +184,17 @@ class Node(object):
 
         """
         return hash(str(self))
+
+    @property
+    def total_cost(self):
+        """
+        Method to get the total cost (Current + Heuristic) of a node.
+
+        Returns:
+            (total_cost): Total cost of the node.
+
+        """
+        return self.cost + self.heuristic
 
     def add_neighbours(self, actions):
         """
@@ -230,4 +256,4 @@ def get_action_cost(action):
         (cost): Cost of the action.
 
     """
-    return 10 if action < 6 else 14
+    return 10 if action < 7 else 14

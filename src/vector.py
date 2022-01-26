@@ -79,9 +79,9 @@ class Vector(object):
         return Vector(int(coords[0]), int(coords[1]), int(coords[2]))
 
 
-def distance(p1, p2):
+def line_distance(p1, p2):
     """
-    Returns the distance between two points (as an integer).
+    Returns the distance between two points.
 
     Args:
         p1(Vector): Point to get the distance for.
@@ -91,4 +91,4 @@ def distance(p1, p2):
         (distance): Distance between the two points.
 
     """
-    return int(math.sqrt(((p2.x - p1.x) ** 2) + ((p2.y - p1.y) ** 2) + ((p2.z - p1.z) ** 2)))
+    return math.sqrt(((p2.x - p1.x) ** 2) + ((p2.y - p1.y) ** 2) + ((p2.z - p1.z) ** 2))

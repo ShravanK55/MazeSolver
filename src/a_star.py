@@ -1,19 +1,19 @@
 """
-Maze Solver - Uniform Cost Search (UCS) Algorithm
+Maze Solver - A-Star (A*) Algorithm
 
-A module implementing the UCS algorithm to solve mazes.
+A module implementing the A* algorithm to solve mazes.
 
 Author: shravan@usc.edu (5451873903)
 
 """
 
 import heapq
+from vector import line_distance
 
 
-def ucs(graph, start, end):
+def a_star(graph, start, end):
     """
-    This is a function implementing the Uniform Cost Search algorithm to find paths in a graph, given a start and end
-    node.
+    This is a function implementing the A-Star algorithm to find paths in a graph, given a start and end node.
 
     Args:
         graph(Graph): Graph to perform the pathfinding on.
@@ -27,17 +27,18 @@ def ucs(graph, start, end):
     """
     start_node = graph.get_node(start)
     end_node = graph.get_node(end)
+    start_node.heuristic = int(line_distance(start_node.position, end_node.position))
 
     if (start_node is None) or (end_node is None):
         return False, None, None
 
-    ucs_queue = [start_node]
+    a_star_queue = [start_node]
     visited = {str(start_node): True}
     parents = {}
 
-    heapq.heapify(ucs_queue)
-    while len(ucs_queue) != 0:
-        node = heapq.heappop(ucs_queue)
+    heapq.heapify(a_star_queue)
+    while len(a_star_queue) != 0:
+        node = heapq.heappop(a_star_queue)
 
         if node == end_node:
             break
@@ -47,7 +48,8 @@ def ucs(graph, start, end):
         for neighbour, cost in neighbours.items():
             if not visited.get(str(neighbour), False):
                 neighbour.cost = cost + node.cost
-                heapq.heappush(ucs_queue, neighbour)
+                neighbour.heuristic = int(line_distance(neighbour.position, end_node.position))
+                heapq.heappush(a_star_queue, neighbour)
                 parents[neighbour] = node
                 visited[str(neighbour)] = True
 
