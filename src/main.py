@@ -39,6 +39,7 @@ if __name__ == "__main__":
     algorithm, start, end, graph = generate_maze(input_file_contents)
     print("Algorithm: {}, Start: {}, End: {}".format(algorithm, start, end))
 
+    # Running the pathfinding algorithms.
     success, path, cost = False, None, None
     if algorithm == "BFS":
         success, path, cost = bfs(graph, start, end)
@@ -58,6 +59,7 @@ if __name__ == "__main__":
         print("Cost: {}".format(cost))
         print("Path Length: {}".format(len(path)))
 
+    # Writing the path to the output file.
     if success:
         with open(output_file_path, 'w') as f:
             f.truncate(0)

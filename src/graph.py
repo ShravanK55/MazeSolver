@@ -164,7 +164,9 @@ class Node(object):
 
     def __lt__(self, other):
         """
-        Method to compare the costs of two nodes.
+        Method to compare the costs of two nodes. This is primarily used for comparison of nodes for operations in
+        a priority queue, such as for the UCS and A* algorithms.
+        NOTE: The setting of cost and heuristic must be taken care of by the algorithm.
 
         Args:
             other(Node): Other node to compare to.
