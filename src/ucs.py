@@ -30,13 +30,12 @@ def ucs(graph, start, end):
     end_node = graph.get_node(end)
 
     if (start_node is None) or (end_node is None):
-        return False, None, None
+        return False, [], None
 
     # Initialize the UCS priority queue.
     ucs_queue = [start_node]
     heapq.heapify(ucs_queue)
-    visited = {str(start_node): True}
-    parents = {}
+    start_node.visited = True
 
     # Searching the graph for the end node.
     while len(ucs_queue) != 0:
@@ -47,23 +46,23 @@ def ucs(graph, start, end):
 
         neighbours = graph.get_neighbours_with_costs(node)
         for neighbour, cost in neighbours.items():
-            if not visited.get(str(neighbour), False):
+            if not neighbour.visited:
                 # Cost of traversing each node in UCS is the cost of traversing to the neighbour + cost of getting
                 # to the parent.
                 neighbour.cost = cost + node.cost
                 heapq.heappush(ucs_queue, neighbour)
-                parents[neighbour] = node
-                visited[str(neighbour)] = True
+                neighbour.parent = node
+                neighbour.visited = True
 
     # If the UCS queue is empty without finding the end node, then we can't reach it.
     else:
-        return False, None, None
+        return False, [], None
 
     # Getting the path from the end node to the source by traversing the parents.
-    node = parents.get(end_node)
-    path = [end_node]
+    node = end_node
+    path = []
     while node is not None:
         path.insert(0, node)
-        node = parents.get(node)
+        node = node.parent
 
     return True, path, end_node.cost

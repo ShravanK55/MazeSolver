@@ -119,7 +119,7 @@ class Node(object):
     A class that implements a node in a graph.
     """
 
-    def __init__(self, position, actions=None, cost=0, heuristic=0):
+    def __init__(self, position, actions=None, cost=0, heuristic=0, parent=None):
         """
         Method to initialize the graph.
 
@@ -127,13 +127,16 @@ class Node(object):
             position(Vector): Position vector of the node.
             actions(list): List of actions we can take at the node.
             cost(int): Cost to reach the node. Only for use in pathfinding. Defaults to 0.
-            heuristic(int): Heuristic to reach the target node. Only used for use in pathfinding. Defaults to 0.
+            heuristic(int): Heuristic to reach the target node. Only for use in pathfinding. Defaults to 0.
+            parent(Node): Parent/neighbour of the node. Only for use in pathfinding. Defaults to None.
 
         """
         self.position = position
         self.neighbours = {}
         self.cost = cost
         self.heuristic = heuristic
+        self.parent = parent
+        self.visited = False
 
         if actions is not None:
             for action in actions:

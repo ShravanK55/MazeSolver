@@ -31,13 +31,12 @@ def a_star(graph, start, end):
     start_node.heuristic = int(line_distance(start_node.position, end_node.position))
 
     if (start_node is None) or (end_node is None):
-        return False, None, None
+        return False, [], None
 
     # Initialize the A* priority queue.
     a_star_queue = [start_node]
     heapq.heapify(a_star_queue)
-    visited = {str(start_node): True}
-    parents = {}
+    start_node.visited = True
 
     # Searching the graph for the end node.
     while len(a_star_queue) != 0:
@@ -48,24 +47,24 @@ def a_star(graph, start, end):
 
         neighbours = graph.get_neighbours_with_costs(node)
         for neighbour, cost in neighbours.items():
-            if not visited.get(str(neighbour), False):
+            if not neighbour.visited:
                 # Cost of traversing each node in A* is the cost of traversing to the neighbour + cost of getting
                 # to the parent. The heuristic is the straight line distance from the neighbour to the end node.
                 neighbour.cost = cost + node.cost
                 neighbour.heuristic = int(line_distance(neighbour.position, end_node.position))
                 heapq.heappush(a_star_queue, neighbour)
-                parents[neighbour] = node
-                visited[str(neighbour)] = True
+                neighbour.parent = node
+                neighbour.visited = True
 
     # If the A* queue is empty without finding the end node, then we can't reach it.
     else:
-        return False, None, None
+        return False, [], None
 
     # Getting the path from the end node to the source by traversing the parents.
-    node = parents.get(end_node)
-    path = [end_node]
+    node = end_node
+    path = []
     while node is not None:
         path.insert(0, node)
-        node = parents.get(node)
+        node = node.parent
 
     return True, path, end_node.cost
